@@ -1,0 +1,28 @@
+.container {
+  position: relative;
+  display: flex;
+}
+
+.tooltip {
+  position: absolute;
+  animation: 0.3s show ease-out;
+  width: 180px;
+  padding: 4px 12px;
+  z-index: 1;
+  margin-left: calc(100% + 10px);
+  justify-content: center;
+  color: #FFFFFF;
+  background-color: #FF8E00;
+  border-radius: 10px;
+  text-align: center;
+  white-space: pre-line;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
