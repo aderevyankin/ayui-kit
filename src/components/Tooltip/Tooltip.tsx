@@ -3,10 +3,10 @@ import styles from './Tooltip.module.scss';
 
 type TooltipProps = {
   children: ReactNode;
-  title: ReactNode;
+  content: ReactNode;
 };
 
-export const Tooltip: FC<TooltipProps> = ({ title, children }) => {
+export const Tooltip: FC<TooltipProps> = ({ content, children }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ export const Tooltip: FC<TooltipProps> = ({ title, children }) => {
       onMouseLeave={() => setOpen(false)}
     >
       {children}
-      {open && <div className={styles.tooltip}>{title}</div>}
+      {open && <div className={styles.tooltip}>{content}</div>}
     </div>
   );
 };
