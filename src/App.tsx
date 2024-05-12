@@ -4,7 +4,7 @@ import { Drawer } from './components/Drawer';
 import { useState } from 'react';
 import { Popover } from './components/Popover';
 
-function App() {
+export const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen(!isDrawerOpen);
@@ -12,10 +12,11 @@ function App() {
 
   return (
     <div className={styles.parent}>
-      <Tooltip content="Hello">
-        <button>Tooltip Button</button>
+      <Tooltip content="Hello" position="right">
+        {/* ну блин не нравится мне прикол с пропс переподачей. я уж че только не пробовал и стало только хуже.*/}
+        {(props) => <button {...props}>Tooltip Button</button>}
       </Tooltip>
-      <Popover content={'Hello from Popover'}>
+      <Popover content="Hello from Popover">
         <button>Popover Button</button>
       </Popover>
       <button onClick={() => toggleDrawer()}>Drawer Button</button>
@@ -26,6 +27,4 @@ function App() {
       />
     </div>
   );
-}
-
-export default App;
+};
