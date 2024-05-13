@@ -1,23 +1,41 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export const useClickOutside = (callback: () => void) => {
-  const ref = useRef<HTMLDivElement>(null);
+type Callback = () => void;
+
+export const useOnClickOutside = (
+  ref: React.RefObject<any> | React.RefObject<any>[],
+  callback: Callback
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+): void => {
+  const refs = Array.isArray(ref) ? ref : [ref];
+
+  const savedCallback = useRef<Callback | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
+    savedCallback.current = callback;
+  });
+
+  useEffect(() => {
+    const listener = (event: MouseEvent) => {
+      if (!event.target) return;
+
+      let clickInside = false;
+
+      for (const r of refs) {
+        if (r.current && r.current.contains(event.target)) {
+          clickInside = true;
+        }
+      }
+
+      if (!clickInside) {
+        savedCallback.current && savedCallback.current();
       }
     };
 
-    document.addEventListener('mouseup', handleClickOutside);
-    document.addEventListener('touchend', handleClickOutside);
+    document.addEventListener('click', listener);
 
-    return () => {
-      document.removeEventListener('mouseup', handleClickOutside);
-      document.removeEventListener('touchend', handleClickOutside);
-    };
-  }, [callback]);
+    return () => document.removeEventListener('click', listener);
 
-  return ref;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedCallback]);
 };

@@ -1,17 +1,11 @@
-import styles from './Popover.module.scss';
-import { FC, ReactNode, useState } from 'react';
+import { FC } from 'react';
+import { PopupBase, PopupBaseProps } from '../PopupBase';
 
-type PopoverProps = {
-  children: ReactNode;
-  content: ReactNode;
-};
-
-export const Popover: FC<PopoverProps> = ({ children, content }) => {
-  const [open, setOpen] = useState(false);
+export const Popover: FC<Omit<PopupBaseProps, 'popupType'>> = (props) => {
+  const { children } = props;
   return (
-    <div className={styles.container} onClick={() => setOpen(!open)}>
+    <PopupBase popupType="popover" {...props}>
       {children}
-      {open && <div className={styles.popover}>{content}</div>}
-    </div>
+    </PopupBase>
   );
 };

@@ -1,4 +1,5 @@
 import { Position } from './types';
+import React from 'react';
 
 export const CalculatePopupPosition = (
   anchorEl: HTMLElement,
@@ -38,3 +39,13 @@ export const CalculatePopupPosition = (
       return { top: 0, left: 0 };
   }
 };
+
+interface IVisible {
+  condition:boolean;
+  children:React.ReactNode;
+}
+
+export const RenderIf= ({
+                         condition,
+                         children,
+                       }: IVisible): JSX.Element | null => (condition ? <>{children}</> :null);
