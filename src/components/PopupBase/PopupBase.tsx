@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { Position } from '../../shared/types';
-import { CalculatePopupPosition, RenderIf } from '../../shared/utils.tsx';
-import { useOnClickOutside } from '../../shared/hooks.tsx';
+import { calculatePopupPosition } from '../../shared/utils.tsx';
+import { useOutsideClick } from '../../shared/hooks.tsx';
 import { Portal } from '../Portal';
 import styles from './PopupBase.module.scss';
 
@@ -22,10 +22,9 @@ export const PopupBase: FC<PopupBaseProps> = ({
   const popupRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({});
 
-  useOnClickOutside(popupRef, () => {
-    if (popupType === 'popover' && anchorEl) {
-      setAnchorEl(null);
-    }
+  useOutsideClick({
+    elementRef: popupRef,
+    onOutsideClick: () => setAnchorEl(null),
   });
 
   useLayoutEffect(() => {
@@ -34,7 +33,7 @@ export const PopupBase: FC<PopupBaseProps> = ({
     if (!anchorEl || !tooltipEl) {
       return;
     }
-    const position = CalculatePopupPosition(
+    const position = calculatePopupPosition(
       anchorEl,
       tooltipEl,
       positionString || 'top',
@@ -42,6 +41,7 @@ export const PopupBase: FC<PopupBaseProps> = ({
     );
     setPosition(position);
   }, [anchorEl]);
+
   return (
     <>
       {anchorEl && (
@@ -51,21 +51,21 @@ export const PopupBase: FC<PopupBaseProps> = ({
           </div>
         </Portal>
       )}
-      <RenderIf condition={popupType === 'tooltip'}>
-        {children({
+
+      {popupType === 'tooltip' &&
+        children({
           onMouseLeave: () => setAnchorEl(null),
           onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(e.currentTarget);
           },
         })}
-      </RenderIf>
-      <RenderIf condition={popupType === 'popover'}>
-        {children({
+
+      {popupType === 'popover' &&
+        children({
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(e.currentTarget);
           },
         })}
-      </RenderIf>
     </>
   );
 };

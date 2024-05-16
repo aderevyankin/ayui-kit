@@ -1,12 +1,12 @@
 import { Position } from './types';
 import React from 'react';
 
-export const CalculatePopupPosition = (
+export const calculatePopupPosition = (
   anchorEl: HTMLElement,
   displayObjectEl: HTMLElement,
   position: Position,
   space: number
-): {} => {
+): Record<string, number> => {
   const anchorRect = anchorEl.getBoundingClientRect();
   const displayObjectRect = displayObjectEl.getBoundingClientRect();
 
@@ -41,11 +41,11 @@ export const CalculatePopupPosition = (
 };
 
 interface IVisible {
-  condition:boolean;
-  children:React.ReactNode;
+  condition: boolean;
+  children: React.ReactNode;
 }
 
-export const RenderIf= ({
-                         condition,
-                         children,
-                       }: IVisible): JSX.Element | null => (condition ? <>{children}</> :null);
+export const RenderIf = ({
+  condition,
+  children,
+}: IVisible): JSX.Element | null => (condition ? <>{children}</> : null);

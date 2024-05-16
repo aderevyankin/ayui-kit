@@ -1,41 +1,71 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
-type Callback = () => void;
+export function useEvent<T extends Function>(fn: T) {
+  const fnRef = useRef(fn);
 
-export const useOnClickOutside = (
-  ref: React.RefObject<any> | React.RefObject<any>[],
-  callback: Callback
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-): void => {
-  const refs = Array.isArray(ref) ? ref : [ref];
+  useLayoutEffect(() => {
+    fnRef.current = fn;
+  }, [fn]);
 
-  const savedCallback = useRef<Callback | null>(null);
+  const eventCb = useCallback(
+    (...args: unknown[]) => {
+      return fnRef.current.apply(null, args);
+    },
+    [fnRef]
+  );
+
+  return eventCb as unknown as T;
+}
+
+interface UseOutsideClickOptions {
+  elementRef: React.RefObject<HTMLElement>;
+  triggerRef?: React.RefObject<HTMLElement>;
+  enabled?: boolean;
+
+  onOutsideClick(e: MouseEvent | TouchEvent): void;
+}
+
+export function useOutsideClick({
+  elementRef,
+  triggerRef,
+  enabled = true,
+  onOutsideClick,
+}: UseOutsideClickOptions) {
+  const handleOutsideClick = useEvent(onOutsideClick);
 
   useEffect(() => {
-    savedCallback.current = callback;
-  });
-
-  useEffect(() => {
-    const listener = (event: MouseEvent) => {
-      if (!event.target) return;
-
-      let clickInside = false;
-
-      for (const r of refs) {
-        if (r.current && r.current.contains(event.target)) {
-          clickInside = true;
-        }
+    if (!enabled) {
+      return;
+    }
+    console.log('attach event listener');
+    const handleClick = (e: MouseEvent | TouchEvent) => {
+      const target = e.target;
+      if (!(target instanceof Node)) {
+        return;
       }
 
-      if (!clickInside) {
-        savedCallback.current && savedCallback.current();
+      if (!elementRef.current) {
+        return;
+      }
+
+      const ignoreElements = [elementRef.current];
+
+      if (triggerRef?.current) {
+        ignoreElements.push(triggerRef.current);
+      }
+
+      if (!ignoreElements.some((element) => element.contains(target))) {
+        console.log('outside click');
+        handleOutsideClick(e);
       }
     };
 
-    document.addEventListener('click', listener);
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('touchstart', handleClick);
 
-    return () => document.removeEventListener('click', listener);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedCallback]);
-};
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('touchstart', handleClick);
+    };
+  }, [enabled, elementRef, triggerRef, handleOutsideClick]);
+}
