@@ -24,8 +24,14 @@ export const PopupBase: FC<PopupBaseProps> = ({
 
   useOutsideClick({
     elementRef: popupRef,
-    onOutsideClick: () => setAnchorEl(null),
+    onOutsideClick: () => hideItem(),
   });
+
+  const hideItem = async () => {
+    popupRef.current?.classList.add(styles.tooltipHide);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setAnchorEl(null);
+  };
 
   useLayoutEffect(() => {
     const tooltipEl = popupRef.current;
@@ -54,7 +60,7 @@ export const PopupBase: FC<PopupBaseProps> = ({
 
       {popupType === 'tooltip' &&
         children({
-          onMouseLeave: () => setAnchorEl(null),
+          onMouseLeave: () => hideItem(),
           onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(e.currentTarget);
           },
