@@ -13,11 +13,10 @@ export const App = () => {
   return (
     <div className={styles.parent}>
       <Tooltip content="Hello from tooltip" position="right">
-        {/* ну блин не нравится мне прикол с пропс переподачей. я уж че только не пробовал и стало только хуже.*/}
-        {(props) => <button {...props}>Tooltip Button</button>}
+        <button>Tooltip Button</button>
       </Tooltip>
       <Popover content="Hello from Popover" position="left">
-        {(props) => <button {...props}>Popover Button</button>}
+        <button>Popover Button</button>
       </Popover>
       <button onClick={() => toggleDrawer()}>Drawer Button</button>
       <Drawer

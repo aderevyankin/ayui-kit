@@ -1,4 +1,11 @@
-import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  ReactNode,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Position } from '../../shared/types';
 import { calculatePopupPosition } from '../../shared/utils.tsx';
 import { useOutsideClick } from '../../shared/hooks.tsx';
@@ -7,7 +14,7 @@ import styles from './PopupBase.module.scss';
 
 export type PopupBaseProps = {
   content: ReactNode;
-  children: (props: any) => ReactNode;
+  children: ReactElement;
   position?: Position;
   popupType: 'tooltip' | 'popover';
 };
@@ -58,19 +65,34 @@ export const PopupBase: FC<PopupBaseProps> = ({
         </Portal>
       )}
 
+      {/*{popupType === 'tooltip' &&*/}
+      {/*  children({*/}
+      {/*    onMouseLeave: () => hideItem(),*/}
+      {/*    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {*/}
+      {/*      setAnchorEl(e.currentTarget);*/}
+      {/*    },*/}
+      {/*  })}*/}
+
       {popupType === 'tooltip' &&
-        children({
+        React.cloneElement(children, {
           onMouseLeave: () => hideItem(),
           onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(e.currentTarget);
           },
         })}
 
+      {/*{popupType === 'popover' &&*/}
+      {/*  children({*/}
+      {/*    onClick: (e: React.MouseEvent<HTMLElement>) => {*/}
+      {/*      setAnchorEl(e.currentTarget);*/}
+      {/*    },*/}
+      {/*  })}*/}
+
       {popupType === 'popover' &&
-        children({
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            setAnchorEl(e.currentTarget);
-          },
+        React.cloneElement(children, {
+          onClick: (e: {
+            currentTarget: React.SetStateAction<HTMLElement | null>;
+          }) => setAnchorEl(e.currentTarget),
         })}
     </>
   );
