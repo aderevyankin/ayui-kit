@@ -1,5 +1,10 @@
+import {
+  FC,
+  ReactNode,
+} from 'react';
+
+import { Portal } from '../Portal';
 import styles from './Drawer.module.scss';
-import { FC, ReactNode } from 'react';
 
 type DrawerProps = {
   content: ReactNode;
@@ -8,13 +13,15 @@ type DrawerProps = {
 };
 export const Drawer: FC<DrawerProps> = ({ content, open, onClose }) => {
   return (
-    <div
-      className={`${styles.overlay} ${!open && styles.overlayHidden} ${open && styles.overlayOpen}`}
-      onClick={onClose}
-    >
-      <div className={`${styles.container} ${open ? styles.open : ''}`}>
-        {content}
+    <Portal>
+      <div
+        className={`${styles.overlay} ${!open && styles.overlayHidden} ${open && styles.overlayOpen}`}
+        onClick={onClose}
+      >
+        <div className={`${styles.container} ${open ? styles.open : ''}`}>
+          {content}
+        </div>
       </div>
-    </div>
+    </Portal>
   );
 };

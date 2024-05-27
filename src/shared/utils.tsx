@@ -1,12 +1,13 @@
-import { Position } from './types';
 import React from 'react';
+
+import { Position } from './types';
 
 export const calculatePopupPosition = (
   anchorEl: HTMLElement,
   displayObjectEl: HTMLElement,
   position: Position,
   space: number
-): Record<string, number> => {
+) => {
   const anchorRect = anchorEl.getBoundingClientRect();
   const displayObjectRect = displayObjectEl.getBoundingClientRect();
 

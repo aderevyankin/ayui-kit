@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 export function useEvent<T extends Function>(fn: T) {
   const fnRef = useRef(fn);
@@ -37,7 +42,7 @@ export function useOutsideClick({
     if (!enabled) {
       return;
     }
-    console.log('attach event listener');
+
     const handleClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target;
       if (!(target instanceof Node)) {
@@ -55,7 +60,6 @@ export function useOutsideClick({
       }
 
       if (!ignoreElements.some((element) => element.contains(target))) {
-        console.log('outside click');
         handleOutsideClick(e);
       }
     };

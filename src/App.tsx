@@ -1,8 +1,9 @@
-import styles from './App.module.scss';
-import { Tooltip } from './components/Tooltip';
-import { Drawer } from './components/Drawer';
 import { useState } from 'react';
+
+import styles from './App.module.scss';
+import { Drawer } from './components/Drawer';
 import { Popover } from './components/Popover';
+import { Tooltip } from './components/Tooltip';
 
 export const App = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
