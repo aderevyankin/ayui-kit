@@ -11,6 +11,7 @@ type DrawerProps = {
   open: boolean;
   onClose: () => void;
 };
+
 export const Drawer: FC<DrawerProps> = ({ content, open, onClose }) => {
   return (
     <Portal>
